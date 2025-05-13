@@ -537,7 +537,7 @@ extern void readB2bType1(FILE* fp, b2bsat_t* b2bsat, b2bsat_t* b2bsat_pre, gtime
             memcpy(b2bsat_pre, b2bsat, sizeof(b2bsat_t));
         }
         // Convert the week and seconds of week into BDT time
-        time = bdt2time(Week, Sow + 14);
+        time = bdt2time(Week, Sow+14);
 
         double ep[6];
         time2epoch(time, ep);
@@ -547,9 +547,7 @@ extern void readB2bType1(FILE* fp, b2bsat_t* b2bsat, b2bsat_t* b2bsat_pre, gtime
             last_file_pos = current_line_pos;
             break;
         }
-        // Adjust the time based on the seconds of the week and time of day
-        t1 = (Sow % 86400) - Tod < 0 ? (Sow % 86400) - Tod + 86400 : (Sow % 86400) - Tod;
-        time.time = time.time - t1 + 14;
+       
         // Process the satellite masks for different satellite systems
         // 0~62 BDS mask, 63~99 GPS mask, 100~136 Galileo mask, 137~173 GLONASS mask
         for (i = 0; i < MaskNSAT; ++i) {
@@ -631,7 +629,7 @@ extern void readB2bType2(FILE* fp, b2bsat_t* b2bsat, gtime_t obstime)
             continue;
         }
         // Convert the week and seconds of week into BDT time
-        time = bdt2time(Week, Sow + 14);
+        time = bdt2time(Week, Sow);
 
         double ep[6];
         time2epoch(time, ep);
@@ -642,9 +640,7 @@ extern void readB2bType2(FILE* fp, b2bsat_t* b2bsat, gtime_t obstime)
             last_file_pos = current_line_pos; // Save the file position of this line for the next read
             break;
         }
-        // Adjust the time based on the seconds of the week and time of day
-        t1 = (Sow % 86400) - Tod < 0 ? (Sow % 86400) - Tod + 86400 : (Sow % 86400) - Tod;
-        time.time = time.time - t1 + 14;
+       
         // Check for valid satellite slot
         if (SatSlot < 0 || SatSlot>255) {
             continue;
@@ -755,7 +751,7 @@ extern void readB2bType3(FILE* fp, b2bsat_t* b2bsat, gtime_t obstime)
             fprintf(stderr, "An error occurred reading the B2btype3 file\n");
             continue;
         }
-        time = bdt2time(Week, Sow + 14);
+        time = bdt2time(Week, Sow );
 
         double ep[6];
         time2epoch(time, ep);
@@ -766,8 +762,7 @@ extern void readB2bType3(FILE* fp, b2bsat_t* b2bsat, gtime_t obstime)
             last_file_pos = current_line_pos;
             break;
         }
-        t1 = (Sow % 86400) - Tod < 0 ? (Sow % 86400) - Tod + 86400 : (Sow % 86400) - Tod;
-        time.time = time.time - t1 + 14;
+     
         if (SatSlot == 0) continue;
         sat = satSlot2Sat(SatSlot);
 
@@ -841,7 +836,7 @@ extern void readB2bType4(FILE* fp, b2bsat_t* b2bsat, gtime_t obstime)
             fprintf(stderr, "An error occurred reading the B2btype4 file\n");
             continue;
         }
-        time = bdt2time(Week, Sow + 14);
+        time = bdt2time(Week, Sow );
 
         double ep[6];
         time2epoch(time, ep);
@@ -853,8 +848,6 @@ extern void readB2bType4(FILE* fp, b2bsat_t* b2bsat, gtime_t obstime)
             last_file_pos = current_line_pos;
             break;
         }
-        t1 = (Sow % 86400) - Tod < 0 ? (Sow % 86400) - Tod + 86400 : (Sow % 86400) - Tod;
-        time.time = time.time - t1 + 14;
         if (IODSSR < 0 || IODSSR>3) continue;
         //IODP
         if (IODP < 0 || IODP>15) continue;
